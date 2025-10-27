@@ -1,5 +1,5 @@
 /* Set default font to Inter */
-html { font-family: 'Inter', sans-serif; }
+html, body { font-family: 'Inter', sans-serif; }
 
 /* Mobile Layout Scroll Fix: On screens smaller than 'lg' (desktop), limit the height of the input form and make it scrollable */
 @media (max-width: 1023px) {
