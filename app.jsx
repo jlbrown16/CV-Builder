@@ -29,12 +29,50 @@ const createEmptyData = () => ({
     skills: '',
 });
 
+const parseDescriptionToBullets = (description) => {
+    if (typeof description !== 'string') return [''];
+
+    const sanitizedLines = description
+        .split('\n')
+        .map(line => line.replace(/^[-•]\s*/, '').trim())
+        .filter(line => line.length > 0);
+
+    return sanitizedLines.length > 0 ? sanitizedLines : [''];
+};
+
+const normalizeExperienceItem = (item) => {
+    if (!item) return createEmptyExperience(Date.now());
+
+    const { description, bullets, ...rest } = item;
+
+    let normalizedBullets = Array.isArray(bullets) ? bullets : parseDescriptionToBullets(description);
+
+    normalizedBullets = normalizedBullets
+        .map((bullet) => (typeof bullet === 'string' ? bullet : ''))
+        .filter((bullet) => bullet.trim().length > 0);
+
+    if (normalizedBullets.length === 0) {
+        normalizedBullets = [''];
+    }
+
+    const normalizedId = rest.id ?? Date.now() + Math.random();
+
+    return {
+        ...rest,
+        id: normalizedId,
+        bullets: normalizedBullets,
+    };
+};
+
+const normalizeExperienceArray = (experience = []) =>
+    experience.map((item) => normalizeExperienceItem(item));
+
 const createEmptyExperience = (id) => ({
   id,
   title: '',
   company: '',
   duration: '',
-  description: '',
+  bullets: [''],
 });
 
 const createEmptyEducation = (id) => ({
@@ -66,14 +104,21 @@ const initialCVData = {
       title: 'Self-Employed Plumbing Contractor',
       company: 'D. Johnson Plumbing & Heating',
       duration: '2020 - Present',
-      description: '• Managed all aspects of a busy independent business, including quoting, scheduling, and billing.\n• Specialised in complete domestic bathroom installations, fitting WCs, baths, showers, and associated pipework.\n• Successfully completed 150+ repair jobs per year, including leaking taps, burst pipes, and drain blockages.',
+      bullets: [
+        'Managed all aspects of a busy independent business, including quoting, scheduling, and billing.',
+        'Specialised in complete domestic bathroom installations, fitting WCs, baths, showers, and associated pipework.',
+        'Successfully completed 150+ repair jobs per year, including leaking taps, burst pipes, and drain blockages.',
+      ],
     },
     {
       id: 2,
       title: 'Apprentice Plumber',
       company: 'A&B Heating Services',
       duration: '2016 - 2020',
-      description: '• Assisted lead engineers with boiler services and radiator replacements.\n• Gained practical experience in hot and cold water systems installation and maintenance.',
+      bullets: [
+        'Assisted lead engineers with boiler services and radiator replacements.',
+        'Gained practical experience in hot and cold water systems installation and maintenance.',
+      ],
     },
   ],
   education: [
@@ -102,16 +147,23 @@ const loadCVData = () => {
         if (storedData) {
             const parsedData = JSON.parse(storedData);
             // Ensure new fields (like primaryColor) are present if loading old data
-            return {
+            const mergedData = {
                 ...initialCVData,
                 ...parsedData,
                 personal: { ...initialCVData.personal, ...parsedData.personal },
+            };
+            return {
+                ...mergedData,
+                experience: normalizeExperienceArray(mergedData.experience),
             };
         }
     } catch (e) {
         console.error("Error loading from localStorage, using initial data.", e);
     }
-    return initialCVData;
+    return {
+        ...initialCVData,
+        experience: normalizeExperienceArray(initialCVData.experience),
+    };
 };
 
 const saveCVData = (data) => {
@@ -176,6 +228,44 @@ window.onload = function() {
       </div>
     );
 
+    const BulletListField = ({ label, bullets, onBulletChange, onAddBullet, onRemoveBullet, colorPrefix }) => (
+      <div className="mb-3">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {label}
+        </label>
+        <div className="space-y-3">
+          {bullets.map((bullet, index) => (
+            <div key={index} className="flex items-start space-x-2">
+              <textarea
+                value={bullet}
+                onChange={(e) => onBulletChange(index, e.target.value)}
+                rows={2}
+                placeholder="e.g., Managed client scheduling and invoicing"
+                className={`flex-1 p-2 border border-gray-300 rounded-lg focus:ring-${colorPrefix}-500 focus:border-${colorPrefix}-500 transition duration-150 ease-in-out`}
+              />
+              <button
+                type="button"
+                onClick={() => onRemoveBullet(index)}
+                className={`mt-1 text-red-500 hover:text-red-700 p-2 rounded-lg border border-transparent hover:border-red-200 transition duration-150 ease-in-out ${bullets.length === 1 ? 'opacity-40 cursor-not-allowed' : ''}`}
+                disabled={bullets.length === 1}
+                aria-label={`Remove bullet ${index + 1}`}
+              >
+                <i className="fa-solid fa-minus-circle"></i>
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={onAddBullet}
+            className={`w-full flex items-center justify-center space-x-2 bg-${colorPrefix}-100 text-${colorPrefix}-700 font-semibold py-2 rounded-lg hover:bg-${colorPrefix}-200 transition duration-150 ease-in-out`}
+          >
+            <i className="fa-solid fa-plus-circle"></i>
+            <span>Add Bullet</span>
+          </button>
+        </div>
+      </div>
+    );
+
     const Toggle = ({ label, name, checked, onChange, colorPrefix }) => (
       // Changed col-span-2 to w-full to stop interfering with the main grid layout when used
       <div className={`flex items-center justify-between w-full mb-3 p-3 bg-${colorPrefix}-50 rounded-lg`}>
@@ -220,21 +310,20 @@ window.onload = function() {
         </span>
       );
 
-      const ExperienceDescription = ({ description }) => {
-          if (!description) return <p className="text-xs text-gray-700">Key responsibilities and achievements.</p>;
+      const ExperienceDescription = ({ bullets }) => {
+          const formattedBullets = Array.isArray(bullets)
+              ? bullets.map((bullet) => (typeof bullet === 'string' ? bullet.trim() : '')).filter((bullet) => bullet.length > 0)
+              : [];
 
-          // Split by newline, filter out empty lines, and map to list items
-          const lines = description.split('\n').filter(line => line.trim().length > 0);
-
-          if (lines.length === 0) return null;
+          if (formattedBullets.length === 0) {
+              return <p className="text-xs text-gray-700">Key responsibilities and achievements.</p>;
+          }
 
           return (
-              // Using an unordered list for proper CV formatting
               <ul className="list-disc list-outside ml-5 text-xs text-gray-700">
-                  {lines.map((line, index) => (
-                      // Trim the bullet point character if it exists (e.g., '•' or '-')
+                  {formattedBullets.map((bullet, index) => (
                       <li key={index} className="mb-0.5">
-                          {line.trim().startsWith('•') || line.trim().startsWith('-') ? line.trim().substring(1).trim() : line.trim()}
+                          {bullet}
                       </li>
                   ))}
               </ul>
@@ -333,7 +422,7 @@ window.onload = function() {
                   {exp.company || 'Company Name'}
                 </p>
                 {/* Replaced p tag with custom ExperienceDescription component for proper bullets */}
-                <ExperienceDescription description={exp.description} />
+                <ExperienceDescription bullets={exp.bullets} />
               </div>
             ))}
           </section>
@@ -538,6 +627,53 @@ window.onload = function() {
             return newData;
         });
       }, [handleSave]); // handleSave is stable (using useCallback)
+
+      const updateExperienceBullets = useCallback((id, updater) => {
+        setCvData((prevCvData) => {
+            const updatedExperience = prevCvData.experience.map((exp) => {
+                if (exp.id !== id) return exp;
+
+                const currentBullets = Array.isArray(exp.bullets) && exp.bullets.length > 0 ? exp.bullets : [''];
+                const nextBullets = updater(currentBullets);
+                const iterableBullets = Array.isArray(nextBullets) ? nextBullets : [];
+                let sanitizedBullets = iterableBullets
+                    .map((bullet) => (typeof bullet === 'string' ? bullet : ''));
+
+                const hasNonEmpty = sanitizedBullets.some((bullet) => bullet.trim().length > 0);
+
+                if (!hasNonEmpty) {
+                    sanitizedBullets = [''];
+                }
+
+                return { ...exp, bullets: sanitizedBullets };
+            });
+
+            const newData = { ...prevCvData, experience: updatedExperience };
+            handleSave(newData);
+            return newData;
+        });
+      }, [handleSave]);
+
+      const handleExperienceBulletChange = useCallback((id, bulletIndex, value) => {
+        updateExperienceBullets(id, (bullets) => {
+            const newBullets = [...bullets];
+            newBullets[bulletIndex] = value;
+            return newBullets;
+        });
+      }, [updateExperienceBullets]);
+
+      const handleAddExperienceBullet = useCallback((id) => {
+        updateExperienceBullets(id, (bullets) => [...bullets, '']);
+      }, [updateExperienceBullets]);
+
+      const handleRemoveExperienceBullet = useCallback((id, indexToRemove) => {
+        updateExperienceBullets(id, (bullets) => {
+            if (bullets.length <= 1) {
+                return [''];
+            }
+            return bullets.filter((_, index) => index !== indexToRemove);
+        });
+      }, [updateExperienceBullets]);
 
       const handleAddSection = (section, emptyCreator) => {
         const newId = Date.now() + Math.random();
@@ -820,16 +956,14 @@ window.onload = function() {
                             placeholder="e.g., 2020 - Present"
                             colorPrefix={primaryColorPrefix}
                             />
-                            {/* Description field always takes full width */}
+                            {/* Bullets field always takes full width */}
                             <div className="col-span-1 md:col-span-2">
-                                <TextAreaField
-                                    label="Description (One bullet point per line)"
-                                    name="description"
-                                    value={exp.description}
-                                    onChange={(e) => handleArrayChange('experience', exp.id, e.target.name, e.target.value)}
-                                    rows={4}
-                                    // Updated placeholder text for clarity
-                                    placeholder="Enter one bullet point per line. Example:&#10;• Managed all aspects of the business&#10;• Specialised in bathroom fitting"
+                                <BulletListField
+                                    label="Key Achievements & Responsibilities"
+                                    bullets={exp.bullets || ['']}
+                                    onBulletChange={(index, value) => handleExperienceBulletChange(exp.id, index, value)}
+                                    onAddBullet={() => handleAddExperienceBullet(exp.id)}
+                                    onRemoveBullet={(index) => handleRemoveExperienceBullet(exp.id, index)}
                                     colorPrefix={primaryColorPrefix}
                                 />
                             </div>
