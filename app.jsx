@@ -44,74 +44,223 @@ const createEmptyEducation = (id) => ({
   duration: '',
 });
 
-// NOTE: This constant holds the clean, default data structure (Example Plumber CV)
-const initialCVData = {
-  personal: {
-    name: 'David Johnson',
-    title: 'Qualified Plumber & Heating Engineer',
-    email: 'david.johnson.plumbing@example.com',
-    phone: '07890 123456',
-    linkedin: 'linkedin.com/in/davidjohnsonplumbing',
-    address: 'Guiseley, Leeds LS20 1BG',
-    showAddress: true,
-    showTitle: true,
-    showLinkedin: true,
-    primaryColor: 'indigo', // Default color scheme
+// NOTE: Template collection providing curated starting points
+const templateData = {
+  plumber: {
+    personal: {
+      name: 'David Johnson',
+      title: 'Qualified Plumber & Heating Engineer',
+      email: 'david.johnson.plumbing@example.com',
+      phone: '07890 123456',
+      linkedin: 'linkedin.com/in/davidjohnsonplumbing',
+      address: 'Guiseley, Leeds LS20 1BG',
+      showAddress: true,
+      showTitle: true,
+      showLinkedin: true,
+      primaryColor: 'indigo', // Default color scheme
+    },
+    // British spelling: 'Specialised' and 'refurbishments' are used here.
+    summary: 'Highly skilled and reliable Level 3 Qualified Plumber with 8 years of experience in domestic and light commercial settings. Proficient in boiler installation, fault finding, and complete bathroom refurbishments. Committed to delivering high-quality workmanship and excellent customer service.',
+    experience: [
+      {
+        id: 1,
+        title: 'Self-Employed Plumbing Contractor',
+        company: 'D. Johnson Plumbing & Heating',
+        duration: '2020 - Present',
+        description: '• Managed all aspects of a busy independent business, including quoting, scheduling, and billing.\n• Specialised in complete domestic bathroom installations, fitting WCs, baths, showers, and associated pipework.\n• Successfully completed 150+ repair jobs per year, including leaking taps, burst pipes, and drain blockages.',
+      },
+      {
+        id: 2,
+        title: 'Apprentice Plumber',
+        company: 'A&B Heating Services',
+        duration: '2016 - 2020',
+        description: '• Assisted lead engineers with boiler services and radiator replacements.\n• Gained practical experience in hot and cold water systems installation and maintenance.',
+      },
+    ],
+    education: [
+      {
+        id: 1,
+        institution: 'Leeds College of Building',
+        degree: 'NVQ Level 3 Plumbing and Heating',
+        duration: '2014 - 2016',
+      },
+      {
+        id: 2,
+        institution: 'Guiseley High School',
+        degree: 'GCSEs (9 subjects including Maths & English)',
+        duration: '2009 - 2014',
+      },
+    ],
+    skills: 'NVQ Level 3 Plumbing, Boiler Service & Repair, Bathroom Fitting, Leak Diagnostics, Pipework Installation (Copper/Plastic), Customer Service, Health & Safety',
   },
-  // British spelling: 'Specialised' and 'refurbishments' are used here.
-  summary: 'Highly skilled and reliable Level 3 Qualified Plumber with 8 years of experience in domestic and light commercial settings. Proficient in boiler installation, fault finding, and complete bathroom refurbishments. Committed to delivering high-quality workmanship and excellent customer service.',
-  experience: [
-    {
-      id: 1,
-      title: 'Self-Employed Plumbing Contractor',
-      company: 'D. Johnson Plumbing & Heating',
-      duration: '2020 - Present',
-      description: '• Managed all aspects of a busy independent business, including quoting, scheduling, and billing.\n• Specialised in complete domestic bathroom installations, fitting WCs, baths, showers, and associated pipework.\n• Successfully completed 150+ repair jobs per year, including leaking taps, burst pipes, and drain blockages.',
+  frontendDeveloper: {
+    personal: {
+      name: 'Amelia Clarke',
+      title: 'Front-End Developer',
+      email: 'amelia.clarke.dev@example.com',
+      phone: '020 7946 0123',
+      linkedin: 'linkedin.com/in/ameliaclarke',
+      address: 'Shoreditch, London E2 7JE',
+      showAddress: true,
+      showTitle: true,
+      showLinkedin: true,
+      primaryColor: 'blue',
     },
-    {
-      id: 2,
-      title: 'Apprentice Plumber',
-      company: 'A&B Heating Services',
-      duration: '2016 - 2020',
-      description: '• Assisted lead engineers with boiler services and radiator replacements.\n• Gained practical experience in hot and cold water systems installation and maintenance.',
+    summary: 'Creative front-end developer with 6 years of experience crafting responsive web applications for high-growth startups. Skilled in translating product requirements into accessible interfaces and collaborating within agile squads.',
+    experience: [
+      {
+        id: 1,
+        title: 'Senior Front-End Developer',
+        company: 'BrightPixel Studios',
+        duration: '2021 - Present',
+        description: '• Led the rebuild of a customer onboarding journey using React and TypeScript, improving activation by 23%.\n• Championed a shared component library with Storybook, reducing duplicated UI work by 40%.\n• Partnered with UX researchers to deliver accessible interfaces compliant with WCAG AA.',
+      },
+      {
+        id: 2,
+        title: 'Front-End Developer',
+        company: 'Northwind Commerce',
+        duration: '2018 - 2021',
+        description: '• Implemented performance optimisations (code-splitting, image lazy-loading) that cut homepage load time to under 2 seconds.\n• Built automated testing with Jest and Cypress, increasing release confidence.\n• Collaborated with back-end engineers on GraphQL integrations powering personalised recommendations.',
+      },
+    ],
+    education: [
+      {
+        id: 1,
+        institution: 'University of Manchester',
+        degree: 'BSc (Hons) Computer Science',
+        duration: '2013 - 2016',
+      },
+    ],
+    skills: 'JavaScript (ES2023), React, TypeScript, CSS-in-JS, Accessibility (WCAG), Jest, Cypress, Agile Delivery',
+  },
+  marketingManager: {
+    personal: {
+      name: 'Priya Desai',
+      title: 'Marketing Manager',
+      email: 'priya.desai.marketing@example.com',
+      phone: '0161 555 9876',
+      linkedin: 'linkedin.com/in/priyadesai',
+      address: 'Manchester M1 1AE',
+      showAddress: true,
+      showTitle: true,
+      showLinkedin: true,
+      primaryColor: 'green',
     },
-  ],
-  education: [
-    {
-      id: 1,
-      institution: 'Leeds College of Building',
-      degree: 'NVQ Level 3 Plumbing and Heating',
-      duration: '2014 - 2016',
-    },
-    {
-      id: 2,
-      institution: 'Guiseley High School',
-      degree: 'GCSEs (9 subjects including Maths & English)',
-      duration: '2009 - 2014',
-    },
-  ],
-  skills: 'NVQ Level 3 Plumbing, Boiler Service & Repair, Bathroom Fitting, Leak Diagnostics, Pipework Installation (Copper/Plastic), Customer Service, Health & Safety',
+    summary: 'Data-driven marketing manager with a decade of experience orchestrating multi-channel campaigns for B2B SaaS scale-ups. Proven success in building demand generation engines, mentoring high-performing teams, and aligning go-to-market plans with executive priorities.',
+    experience: [
+      {
+        id: 1,
+        title: 'Head of Marketing',
+        company: 'Nimbus Analytics',
+        duration: '2020 - Present',
+        description: '• Directed a cross-functional team of 8 marketers delivering pipeline growth of 35% year-on-year.\n• Introduced account-based marketing motions that landed 12 enterprise clients within 6 months.\n• Established marketing automation dashboards to surface campaign ROI in real time for leadership.',
+      },
+      {
+        id: 2,
+        title: 'Marketing Manager',
+        company: 'Helios HR Software',
+        duration: '2016 - 2020',
+        description: '• Launched integrated product campaigns across paid search, webinars, and partner channels generating £1.2m in influenced revenue.\n• Built a content programme that doubled organic blog traffic within the first year.\n• Managed agency relationships and negotiated media spend efficiencies of 18%.',
+      },
+    ],
+    education: [
+      {
+        id: 1,
+        institution: 'University of Leeds',
+        degree: 'BA (Hons) Marketing',
+        duration: '2009 - 2012',
+      },
+      {
+        id: 2,
+        institution: 'Chartered Institute of Marketing',
+        degree: 'Professional Diploma in Digital Marketing',
+        duration: '2014',
+      },
+    ],
+    skills: 'Demand Generation Strategy, Marketing Automation (HubSpot), Campaign Analytics, Stakeholder Management, ABM, Team Leadership, Budget Planning',
+  },
 };
+
+const templateDetails = {
+  plumber: {
+    label: 'Trade Professional (Plumber)',
+    description: 'Ideal for skilled tradespeople showcasing hands-on expertise and customer service.',
+  },
+  frontendDeveloper: {
+    label: 'Front-End Developer',
+    description: 'Designed for product squads needing strong UX collaboration and performance focus.',
+  },
+  marketingManager: {
+    label: 'Marketing Manager',
+    description: 'Highlights campaign leadership, revenue impact, and executive alignment.',
+  },
+};
+
+const DEFAULT_TEMPLATE_KEY = 'plumber';
 
 // --- Local Storage Handlers ---
 const LOCAL_STORAGE_KEY = 'cvBuilderData_v1';
+const LOCAL_STORAGE_TEMPLATE_KEY = 'cvBuilderSelectedTemplate_v1';
+
+const cloneTemplateData = (template) => JSON.parse(JSON.stringify(template));
+
+const resolveTemplateKey = (key) => {
+    if (typeof key === 'string' && templateData[key]) {
+        return key;
+    }
+
+    return DEFAULT_TEMPLATE_KEY;
+};
+
+const loadTemplateKey = () => {
+    try {
+        const storedKey = localStorage.getItem(LOCAL_STORAGE_TEMPLATE_KEY);
+        const resolvedKey = resolveTemplateKey(storedKey || DEFAULT_TEMPLATE_KEY);
+
+        if (resolvedKey !== storedKey) {
+            localStorage.setItem(LOCAL_STORAGE_TEMPLATE_KEY, resolvedKey);
+        }
+
+        return resolvedKey;
+    } catch (e) {
+        console.error("Error loading template key from localStorage, using default.", e);
+        return DEFAULT_TEMPLATE_KEY;
+    }
+};
+
+const saveTemplateKey = (key) => {
+    try {
+        localStorage.setItem(LOCAL_STORAGE_TEMPLATE_KEY, resolveTemplateKey(key));
+    } catch (e) {
+        console.error("Error saving template key to localStorage.", e);
+    }
+};
 
 const loadCVData = () => {
+    const templateKey = loadTemplateKey();
+    const templateSource = templateData[templateKey] || templateData[DEFAULT_TEMPLATE_KEY];
+
+    if (!templateSource) {
+        return createEmptyData();
+    }
+
+    const baseTemplate = cloneTemplateData(templateSource);
+
     try {
         const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
         if (storedData) {
             const parsedData = JSON.parse(storedData);
             // Ensure new fields (like primaryColor) are present if loading old data
             return {
-                ...initialCVData,
+                ...baseTemplate,
                 ...parsedData,
-                personal: { ...initialCVData.personal, ...parsedData.personal },
+                personal: { ...baseTemplate.personal, ...parsedData.personal },
             };
         }
     } catch (e) {
-        console.error("Error loading from localStorage, using initial data.", e);
+        console.error("Error loading from localStorage, using template data.", e);
     }
-    return initialCVData;
+    return baseTemplate;
 };
 
 const saveCVData = (data) => {
@@ -445,9 +594,15 @@ window.onload = function() {
 
     function App() {
       const [cvData, setCvData] = useState(loadCVData);
+      const [appliedTemplateKey, setAppliedTemplateKey] = useState(() => loadTemplateKey());
+      const [previewTemplateKey, setPreviewTemplateKey] = useState(() => loadTemplateKey());
       const [isSaving, setIsSaving] = useState(false);
       const previewRef = useRef(null);
       const debounceTimeoutRef = useRef(null);
+
+      const currentPreviewTemplate = templateData[previewTemplateKey] || templateData[DEFAULT_TEMPLATE_KEY];
+      const isTemplateApplied = previewTemplateKey === appliedTemplateKey;
+      const appliedTemplateLabel = templateDetails[appliedTemplateKey]?.label || appliedTemplateKey || templateDetails[DEFAULT_TEMPLATE_KEY]?.label || DEFAULT_TEMPLATE_KEY;
 
       const primaryColorPrefix = cvData.personal.primaryColor;
 
@@ -460,7 +615,7 @@ window.onload = function() {
       };
 
       const handleSave = useCallback((dataToSave) => {
-        setIsSaving(true); 
+        setIsSaving(true);
 
         if (debounceTimeoutRef.current) {
             clearTimeout(debounceTimeoutRef.current);
@@ -468,20 +623,48 @@ window.onload = function() {
 
         debounceTimeoutRef.current = setTimeout(() => {
             saveCVData(dataToSave);
-            setIsSaving(false); 
+            setIsSaving(false);
         }, 500);
       }, []);
+
+
+      const handleApplyTemplate = useCallback(() => {
+          const resolvedKey = resolveTemplateKey(previewTemplateKey);
+          const templateToApply = templateData[resolvedKey];
+
+          if (!templateToApply) {
+              return;
+          }
+
+          const templateCopy = cloneTemplateData(templateToApply);
+
+          setCvData(templateCopy);
+          setAppliedTemplateKey(resolvedKey);
+          setPreviewTemplateKey(resolvedKey);
+          saveTemplateKey(resolvedKey);
+          handleSave(templateCopy);
+      }, [previewTemplateKey, handleSave]);
 
 
       // --- Reset Handlers ---
 
       const handleReset = () => {
           // NOTE: window.confirm is used here for simplicity as the environment permits it for critical actions
-          if (window.confirm("Are you sure you want to reset all data to the example plumber CV? This action cannot be undone.")) {
-              // Create a fresh deep copy of the initial data
-              const initialDataCopy = JSON.parse(JSON.stringify(initialCVData));
-              setCvData(initialDataCopy);
-              handleSave(initialDataCopy); // Save the reset state to localStorage
+          const templateKey = resolveTemplateKey(appliedTemplateKey);
+          const templateLabel = templateDetails[templateKey]?.label || templateKey;
+          if (window.confirm(`Are you sure you want to reset all data to the ${templateLabel} template example? This action cannot be undone.`)) {
+              const templateSource = templateData[templateKey];
+
+              if (!templateSource) {
+                  return;
+              }
+
+              const templateCopy = cloneTemplateData(templateSource);
+              setCvData(templateCopy);
+              setAppliedTemplateKey(templateKey);
+              setPreviewTemplateKey(templateKey);
+              saveTemplateKey(templateKey);
+              handleSave(templateCopy); // Save the reset state to localStorage
           }
       };
 
@@ -614,9 +797,68 @@ window.onload = function() {
                             className={`bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out text-sm`}
                             aria-label="Reset Data"
                         >
-                            Reset to Example
+                            Reset to Template
                         </button>
                     </div>
+                </div>
+
+                {/* Template Selector */}
+                <div className="mb-8 border-b pb-4">
+                  <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                    <div className="md:flex-1 w-full">
+                      <label htmlFor="template-select" className="block text-sm font-medium text-gray-700 mb-1">
+                        Choose a template
+                      </label>
+                      <select
+                        id="template-select"
+                        className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        value={previewTemplateKey}
+                        onChange={(e) => setPreviewTemplateKey(resolveTemplateKey(e.target.value))}
+                      >
+                        {Object.keys(templateData).map((key) => (
+                          <option key={key} value={key}>
+                            {templateDetails[key]?.label || key}
+                          </option>
+                        ))}
+                      </select>
+                      {templateDetails[previewTemplateKey]?.description && (
+                        <p className="text-xs text-gray-500 mt-2">
+                          {templateDetails[previewTemplateKey].description}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex items-end">
+                      <button
+                        onClick={handleApplyTemplate}
+                        className={`inline-flex items-center justify-center px-4 py-2 rounded-lg shadow-md text-sm font-semibold transition duration-150 ease-in-out ${
+                          isTemplateApplied
+                            ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                            : 'bg-indigo-500 hover:bg-indigo-600 text-white'
+                        }`}
+                        disabled={isTemplateApplied}
+                      >
+                        {isTemplateApplied ? 'Template Applied' : 'Apply Template'}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                      <h4 className="text-sm font-semibold text-gray-700">Summary Preview</h4>
+                      <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                        isTemplateApplied ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'
+                      }`}>
+                        {isTemplateApplied ? `Applied: ${appliedTemplateLabel}` : 'Preview Only'}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 whitespace-pre-line mt-2">
+                      {currentPreviewTemplate.summary || 'No summary provided for this template yet.'}
+                    </p>
+                    {!isTemplateApplied && (
+                      <p className="text-xs text-gray-500 mt-2">
+                        Currently applied template: {templateDetails[appliedTemplateKey]?.label || appliedTemplateKey}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 {/* Colour Selector (Updated for British English) */}
